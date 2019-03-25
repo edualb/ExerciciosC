@@ -2,6 +2,12 @@
 
 # A1
 
+- ## Desafios das aulas
+    
+    - 25/03/2019 
+    
+        Desenvolver a versão interativa das funções `sobe_heap` e `desce_heap`.
+    
 - ## **Exercicio 1:**
 
     Implemente uma função que faça a inserção em uma lista duplamente encadeada. Esta lista deve ser uma agenda telefônica, com o nome completo e o telefone de cada contato. A inserção na lista deve ser feita em ordem alfabética.
