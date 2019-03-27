@@ -27,6 +27,8 @@ Lista* criaLista () {
 
 void inserir (Lista* l) {
 	Agenda* agendaAux = (Agenda*) malloc(sizeof(Agenda));
+	char alfabeto[26] = {'a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','x','w','y','z'};
+	char alfabetoUpperCase[26] = {'A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','X','W','Y','Z'};
 	
 	if(agendaAux == NULL) {
 		printf("Memoria cheia.");

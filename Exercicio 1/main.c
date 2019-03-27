@@ -10,7 +10,7 @@ int main(int argc, char *argv[]) {
 	
 	l = criaLista();
 	
-	for (i = 0 ; i < 5 ; i++) {
+	for (i = 0 ; i < 2 ; i++) {
 		inserir(l);	
 	}
 	
