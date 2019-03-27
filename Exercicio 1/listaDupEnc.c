@@ -29,7 +29,7 @@ void inserir (Lista* l) {
 	Agenda* agendaAux = (Agenda*) malloc(sizeof(Agenda));
 	
 	if(agendaAux == NULL) {
-		printf("MEmoria cheia.");
+		printf("Memoria cheia.");
 		exit(1);
 	}
 	
@@ -37,12 +37,23 @@ void inserir (Lista* l) {
 	agendaAux->ant = NULL;
 	
 	printf("Digite o nome:\n");
-	scanf("%[^\n]", agendaAux->nome);
+	scanf(" %[^\n]", agendaAux->nome);
 
 	printf("Digite o telefone:\n");
 	scanf(" %[^\n]", agendaAux->telefone);
 	
-	l->prim = agendaAux;	
+	if (l->prim == NULL) {
+		l->prim = agendaAux;
+		return;	
+	}
+	
+	Agenda* percorreAgenda = l->prim;
+	while (percorreAgenda->prox != NULL) {
+		percorreAgenda = percorreAgenda->prox;
+	}
+	
+	percorreAgenda->prox = agendaAux;
+	agendaAux->ant = percorreAgenda;
 }
 
 void imprimir (Lista* l) {
@@ -50,9 +61,16 @@ void imprimir (Lista* l) {
 	printf("----------------\n");
 	printf("-----Agenda-----\n");
 	printf("----------------\n");
+
+	Agenda* percorreAgenda = l->prim;
+	while (percorreAgenda->prox != NULL) {
+		printf(" \n");
+		printf("Nome: %s\n", percorreAgenda->nome);
+		printf("Telefone: %s\n", percorreAgenda->telefone);
+		percorreAgenda = percorreAgenda->prox;
+	}
+	
 	printf(" \n");
-	
-	printf("Nome: %s\n", l->prim->nome);
-	printf("Telefone: %s\n", l->prim->telefone);
-	
+	printf("Nome: %s\n", percorreAgenda->nome);
+	printf("Telefone: %s\n", percorreAgenda->telefone);
 }

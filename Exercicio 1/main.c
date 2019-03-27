@@ -6,10 +6,13 @@
 
 int main(int argc, char *argv[]) {
 	Lista* l = NULL;
+	int i;
 	
 	l = criaLista();
 	
-	inserir(l);
+	for (i = 0 ; i < 5 ; i++) {
+		inserir(l);	
+	}
 	
 	imprimir(l);
 	return 0;
