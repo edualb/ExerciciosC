@@ -51,7 +51,6 @@ void inserir (Lista* l) {
 	Agenda* percorreAgenda = l->prim;
 	while (percorreAgenda->prox != NULL) {
 		if (strcmp(agendaAux->nome, percorreAgenda->nome) > 0 && strcmp(agendaAux->nome, percorreAgenda->prox->nome) < 0) {
-			printf("entra aqui\n");
 			agendaAux->prox = percorreAgenda->prox;
 			agendaAux->ant = percorreAgenda;
 			
@@ -64,10 +63,16 @@ void inserir (Lista* l) {
 	}
 	
 	// condicao caso seja o primeiro
-	if (percorreAgenda->prox == NULL) {
-		percorreAgenda->prox = agendaAux;
-		agendaAux->ant = percorreAgenda;
+	if (percorreAgenda == l->prim && strcmp(agendaAux->nome, percorreAgenda->nome) < 0) {
+		printf("entrou no primeiro\n");
+		agendaAux->prox = percorreAgenda;
+		percorreAgenda->ant = agendaAux;
+		l->prim = agendaAux;
+		return;
 	}
+	
+	percorreAgenda->prox = agendaAux;
+	agendaAux->ant = percorreAgenda;
 }
 
 void imprimir (Lista* l) {
