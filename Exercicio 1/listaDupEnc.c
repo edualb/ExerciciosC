@@ -49,30 +49,43 @@ void inserir (Lista* l) {
 	}
 	
 	Agenda* percorreAgenda = l->prim;
-	while (percorreAgenda->prox != NULL) {
-		if (strcmp(agendaAux->nome, percorreAgenda->nome) > 0 && strcmp(agendaAux->nome, percorreAgenda->prox->nome) < 0) {
-			agendaAux->prox = percorreAgenda->prox;
-			agendaAux->ant = percorreAgenda;
-			
-			percorreAgenda->prox->ant = agendaAux;
-			percorreAgenda->prox = agendaAux;
-			return;
-		} else {
-			percorreAgenda = percorreAgenda->prox;
-		}
-	}
-	
-	// condicao caso seja o primeiro
-	if (percorreAgenda == l->prim && strcmp(agendaAux->nome, percorreAgenda->nome) < 0) {
-		printf("entrou no primeiro\n");
-		agendaAux->prox = percorreAgenda;
-		percorreAgenda->ant = agendaAux;
-		l->prim = agendaAux;
+	ordenaAlfabeticamenteRecursiva(percorreAgenda, agendaAux);
+	reposicionarInicioLista(l);
+}
+
+void ordenaAlfabeticamenteRecursiva(Agenda* agendaAtual, Agenda* agendaInsere) {
+	if (agendaAtual == NULL || agendaInsere == NULL) {
+		printf("entrou aqui\n");
 		return;
 	}
-	
-	percorreAgenda->prox = agendaAux;
-	agendaAux->ant = percorreAgenda;
+	if (strcmp(agendaInsere->nome, agendaAtual->nome) < 0) {
+		printf("Troca a posicao\n");
+		agendaInsere->prox = agendaAtual;
+		agendaInsere->ant = agendaAtual->ant;
+		
+		if (agendaAtual->ant != NULL) {
+			agendaAtual->ant->prox = agendaInsere;
+		}
+		
+		agendaAtual->ant = agendaInsere;
+		return;
+	} else {
+		if (agendaAtual->prox == NULL) {
+			printf("Insere na ultima\n");
+			agendaAtual->prox = agendaInsere;
+			agendaInsere->ant = agendaInsere;
+			return;
+		}
+		ordenaAlfabeticamenteRecursiva(agendaAtual->prox, agendaInsere);
+	}
+}
+
+void reposicionarInicioLista(Lista* l) {
+	Agenda* agenda = l->prim;
+	while (agenda->ant != NULL) {
+		l->prim = agenda->ant;
+		agenda = agenda->ant;
+	}
 }
 
 void imprimir (Lista* l) {
