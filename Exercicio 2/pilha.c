@@ -45,14 +45,22 @@ void desempilha(Pilha* p) {
 	free(e);
 }
 
+void destroiPilha(Pilha* p) {
+	while(p->topo != NULL) {
+		desempilha(p);
+	}
+}
+
 void imprimePilha(Pilha* p) {
-	Pilha* pAux = p;
+	Elemento* eAux = p->topo;
 	
 	printf("\n");
 	printf("Pilha:\n");
-	while(pAux->topo != NULL) {
-		printf("Valor: %d\n", pAux->topo->valor);
+	while(p->topo != NULL) {
+		printf("Valor: %d\n", p->topo->valor);
 		printf("\n");
-		pAux->topo = pAux->topo->prox;
+		p->topo = p->topo->prox;
 	}
+	
+	p->topo = eAux;
 }
