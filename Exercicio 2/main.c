@@ -4,5 +4,9 @@
 
 int main(int argc, char *argv[]) {
 	Pilha* p = criaPilha();
+	
+	empilha(p);
+	
+	imprimePilha(p);
 	return 0;
 }

@@ -20,6 +20,34 @@ Pilha* criaPilha() {
 	}
 	
 	p->topo = NULL;
-	printf("Memoria da pilha criada.");
+	printf("Memoria da pilha criada.\n");
 	return p;
+}
+
+void empilha(Pilha* p) {
+	Elemento* e = (Elemento*) malloc(sizeof(Elemento));
+	
+	if (e == NULL) {
+		printf("Memoria cheia.");
+		exit(1);
+	}
+	
+	printf("Digite o valor do elemento:\n");
+	scanf("%d", &e->valor);
+	
+	if (p->topo == NULL) {
+		e->prox = NULL;
+		p->topo = e;
+		return;
+	}
+}
+
+void imprimePilha(Pilha* p) {
+	Pilha* pAux = p;
+	
+	while(pAux->topo != NULL) {
+		printf("Valor: %d\n", pAux->topo->valor);
+		printf("\n");
+		pAux->topo = pAux->topo->prox;
+	}
 }
