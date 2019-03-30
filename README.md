@@ -25,6 +25,8 @@
     -   destruir a estrutura de dados criada
     
     Você pode implementar esta estrutura de dados utilizando vetor ou lista encadeada.
+    
+    [*Solução*](https://github.com/edualb/ExerciciosEstruturaDeDados2/tree/master/Exercicio%202)
 
 - ## **Exercicio 3:**
 
