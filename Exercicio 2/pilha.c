@@ -35,11 +35,8 @@ void empilha(Pilha* p) {
 	printf("Digite o valor do elemento:\n");
 	scanf("%d", &e->valor);
 	
-	if (p->topo == NULL) {
-		e->prox = NULL;
-		p->topo = e;
-		return;
-	}
+	e->prox = p->topo;
+	p->topo = e;
 }
 
 void imprimePilha(Pilha* p) {

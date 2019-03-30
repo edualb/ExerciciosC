@@ -4,8 +4,11 @@
 
 int main(int argc, char *argv[]) {
 	Pilha* p = criaPilha();
+	int i;
 	
-	empilha(p);
+	for (i = 0 ; i < 3 ; i++) {
+		empilha(p);
+	}
 	
 	imprimePilha(p);
 	return 0;
