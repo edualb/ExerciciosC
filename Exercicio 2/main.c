@@ -10,6 +10,8 @@ int main(int argc, char *argv[]) {
 		empilha(p);
 	}
 	
+	desempilha(p);
+	
 	imprimePilha(p);
 	return 0;
 }

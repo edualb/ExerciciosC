@@ -39,9 +39,17 @@ void empilha(Pilha* p) {
 	p->topo = e;
 }
 
+void desempilha(Pilha* p) {
+	Elemento* e = p->topo;
+	p->topo = p->topo->prox;
+	free(e);
+}
+
 void imprimePilha(Pilha* p) {
 	Pilha* pAux = p;
 	
+	printf("\n");
+	printf("Pilha:\n");
 	while(pAux->topo != NULL) {
 		printf("Valor: %d\n", pAux->topo->valor);
 		printf("\n");
