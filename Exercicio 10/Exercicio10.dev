@@ -1,6 +1,6 @@
 [Project]
-FileName=Exercicio9.dev
-Name=Exercicio 9
+FileName=Exercicio10.dev
+Name=Exercicio10
 Type=1
 Ver=2
 ObjFiles=
@@ -61,7 +61,7 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit2]
-FileName=lista.h
+FileName=heap-min.h
 CompileCpp=0
 Folder=
 Compile=1
@@ -71,7 +71,7 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit3]
-FileName=lista.c
+FileName=heap-min.c
 CompileCpp=0
 Folder=
 Compile=1
