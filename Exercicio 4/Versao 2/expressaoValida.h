@@ -1,0 +1,1 @@
+int ehExpressaoValida(char* expressao);
