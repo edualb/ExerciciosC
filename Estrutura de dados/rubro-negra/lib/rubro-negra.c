@@ -2,115 +2,142 @@
 #include <stdlib.h>
 #include "rubro-negra.h"
 
-// Responsable to print All nodes of the tree.
-void printAll(Node* node);
+#define RED 1
+#define BLACK 0
 
-// Responsable to get the father of a node.
-Node* getFatherNode(Node* father, Node* node);
+// Responsable to print All nodes of the tree.
+void printAll(Node *node);
+
+// Responsable to insert a new node.
+Node *insertNode(Node* root, Node* node);
 
 // Responsable to recoloring the nodes
-void recoloring(Node *node);
+void changeColor(Node *node);
 
-// Responsable to get the brother of one node.
-Node *getBrotherNode(Node *node);
+// Responsable to get the color of the node
+int getColor(Node *node);
+
+int isChangeColor(Node *node);
+int isRotationRight(Node *node);
+int isRotationLeft(Node *node);
+Node *rotationRight(Node *node);
+Node *rotationLeft(Node *node);
 
 typedef struct node {
     int value;
-    char color; // r-> red, b-> black
-    Node* right;
-    Node* left;
-    Node* father;
+    int color; // 1-> RED, 0-> BLACK
+    Node *right;
+    Node *left;
 } Node;
 
 typedef struct tree {
-    Node* root;
+    Node *root;
 } Tree;
 
-Tree* mainTree;
+Tree *mainTree;
 
-Node* create(int value) {
+Node *create(int value) {
     Node* node = (Node *) malloc(sizeof(Node));
     node->value = value;
-    node->color = 'r';
-    node->father = NULL;
+    node->color = RED;
     node->left = NULL;
     node->right = NULL;
     return node;
 }
 
-void insert(Node* node) {
+void insert(Node *node) {
     if (mainTree == NULL) {
         mainTree = (Tree *) malloc(sizeof(Tree));
-        node->color = 'b';
-        mainTree->root = node;
-        return;
     }
 
-    Node* father = getFatherNode(mainTree->root, node);
-    Node* uncle = getBrotherNode(father);
-
-    node->father = father;
-    if (node->value < father->value) {
-        father->left = node;
-    } else if (node->value > father->value) {
-        father->right = node;
-    }
-
-    if (uncle->color == 'r' && father->color == 'r') {
-        recoloring(uncle->father);
-    }
+    mainTree->root = insertNode(mainTree->root, node);
+    mainTree->root->color = BLACK;
 }
 
-Node *getBrotherNode(Node *node) {
-    Node* father = node->father;
-    Node* brother;
-    if (father != NULL) {
-        if (father->right != NULL) {
-            if (father->right->value != node->value) {
-                brother = father->right;
-            }
-        }
-        if (father->left != NULL) {
-            if (father->left->value != node->value) {
-                brother = father->left;
-            }
-        }
-    }
-    return brother;
-}
-
-Node* getFatherNode(Node* father, Node* node) {
-    if (node->value < father->value) {
-        if (father->left != NULL) {
-            return getFatherNode(father->left, node);
-        }
-    } else if (node->value > father->value) {
-        if (father->right != NULL) {
-            return getFatherNode(father->right, node);
-        }
-    }
-    return father;
-}
-
-void recoloring(Node *node) {
-    if (node->left != NULL) {
-        node->left->color = node->left->color == 'r' ? 'b' : 'r';
-    }
-
-    if (node->right != NULL) {
-        node->right->color = node->right->color == 'r' ? 'b' : 'r';
-    }
-
-    if (node->father != NULL) {
-        node->color = node->color == 'r' ? 'b' : 'r';
-        if (node->father->color == 'r') {
-            recoloring(node->father);
-        }
+Node* insertNode(Node* root, Node* node) {
+    if (root == NULL) {
+        root = node;
     } else {
-        node->color = 'b';
+        if (node->value < root->value) {
+            root->left = insertNode(root->left, node);
+        } else if (node->value > root->value) {
+            root->right = insertNode(root->right, node);
+        }
+
+        if (isRotationRight(root)) {
+            root = rotationRight(root);
+        }
+
+        if (isRotationLeft(root)) {
+            root = rotationLeft(root);
+        }
+
+        if (isChangeColor(root)) {
+            changeColor(root);
+        }
+    }
+    return root;
+}
+
+void changeColor(Node *node) {
+    node->color = !node->color;
+    if (node->left != NULL) {
+        node->left->color = !node->left->color;
+    }
+    if (node->right != NULL) {
+        node->right->color = !node->right->color;
     }
 }
 
+int getColor(Node *node) {
+    if (node == NULL) {
+        return BLACK;
+    } else {
+        return node->color;
+    }
+}
+
+Node *rotationLeft(Node *node) {
+    Node *nodeRight = node->right;
+    node->right = nodeRight->left;
+    nodeRight->left = node;
+    nodeRight->color = node->color;
+    node->color = RED;
+    return nodeRight;
+}
+
+Node *rotationRight(Node *node) {
+    Node *nodeLeft = node->left;
+    node->left = nodeLeft->right;
+    nodeLeft->right = node;
+    nodeLeft->color = node->color;
+    node->color = RED;
+    return nodeLeft;
+}
+
+int isChangeColor(Node *node) {
+    int isRightGrandsonRed = node->right != NULL && 
+        (getColor(node->right->right) == RED || getColor(node->right->left) == RED);
+
+    int isLeftGrandsonRed = node->left != NULL && 
+        (getColor(node->left->right) == RED || getColor(node->left->left) == RED);
+
+    return getColor(node->right) == RED && getColor(node->left) == RED && (isLeftGrandsonRed || isRightGrandsonRed);
+}
+
+int isRotationRight(Node *node) {
+    int isRightGrandsonRed = node->left != NULL && getColor(node->left->left) == RED;
+    int isRightSonRed = getColor(node->left) == RED;
+
+    return getColor(node->right) == BLACK && isRightSonRed && isRightGrandsonRed;
+}
+
+int isRotationLeft(Node *node) {
+    int isRightGrandsonRed = node->right != NULL && getColor(node->right->right) == RED;
+    int isRightSonRed = getColor(node->right) == RED;
+
+    return getColor(node->left) == BLACK && isRightSonRed && isRightGrandsonRed;
+}
 
 /*
 * Print tree
@@ -123,22 +150,41 @@ void printTree() {
     }
 }
 
-void printAll(Node* node) {
+void printAll(Node *node) {
     if (node->right != NULL) {
         printAll(node->right);
     }
 
-    if (node->father != NULL) {
-        if (node->father->left->value == node->value) {
-            printf("Left son of father: %d - value: %d, color: %c\n", node->father->value, node->value, node->color);
+    if (node->right != NULL && node->left != NULL) {
+        if (mainTree->root == node) {
+            printf("** ROOT **   ");
         } else {
-            printf("Right son of father: %d - value: %d, color: %c\n", node->father->value, node->value, node->color);
+            printf("** NODE **   ");
         }
-
+        printf("value: %d, color: %d | right: %d, left: %d\n", node->value, node->color, node->right->value, node->left->value);
+    } else if (node->right != NULL && node->left == NULL) {
+        if (mainTree->root == node) {
+            printf("** ROOT **   ");
+        } else {
+            printf("** NODE **   ");
+        }
+        printf("value: %d, color: %d | right: %d, left: NULL\n", node->value, node->color, node->right->value);
+    } else if (node->right == NULL && node->left != NULL) {
+        if (mainTree->root == node) {
+            printf("** ROOT **   ");
+        } else {
+            printf("** NODE **   ");
+        }
+        printf("value: %d, color: %d | right: NULL, left: %d\n", node->value, node->color, node->left->value);
     } else {
-        printf("Root - value: %d, color: %c\n", node->value, node->color);
+        if (mainTree->root == node) {
+            printf("** ROOT **   ");
+        } else {
+            printf("** NODE **   ");
+        }
+        printf("value: %d, color: %d | right: NULL, left: NULL\n", node->value, node->color);
     }
-
+    
     if (node->left != NULL) {
         printAll(node->left);
     }
