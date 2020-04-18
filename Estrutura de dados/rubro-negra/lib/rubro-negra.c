@@ -8,6 +8,12 @@ void printAll(Node* node);
 // Responsable to get the father of a node.
 Node* getFatherNode(Node* father, Node* node);
 
+// Responsable to recoloring the nodes
+void recoloring(Node *node);
+
+// Responsable to get the brother of one node.
+Node *getBrotherNode(Node *node);
+
 typedef struct node {
     int value;
     char color; // r-> red, b-> black
@@ -26,6 +32,9 @@ Node* create(int value) {
     Node* node = (Node *) malloc(sizeof(Node));
     node->value = value;
     node->color = 'r';
+    node->father = NULL;
+    node->left = NULL;
+    node->right = NULL;
     return node;
 }
 
@@ -38,6 +47,7 @@ void insert(Node* node) {
     }
 
     Node* father = getFatherNode(mainTree->root, node);
+    Node* uncle = getBrotherNode(father);
 
     node->father = father;
     if (node->value < father->value) {
@@ -45,6 +55,28 @@ void insert(Node* node) {
     } else if (node->value > father->value) {
         father->right = node;
     }
+
+    if (uncle->color == 'r' && father->color == 'r') {
+        recoloring(uncle->father);
+    }
+}
+
+Node *getBrotherNode(Node *node) {
+    Node* father = node->father;
+    Node* brother;
+    if (father != NULL) {
+        if (father->right != NULL) {
+            if (father->right->value != node->value) {
+                brother = father->right;
+            }
+        }
+        if (father->left != NULL) {
+            if (father->left->value != node->value) {
+                brother = father->left;
+            }
+        }
+    }
+    return brother;
 }
 
 Node* getFatherNode(Node* father, Node* node) {
@@ -60,6 +92,29 @@ Node* getFatherNode(Node* father, Node* node) {
     return father;
 }
 
+void recoloring(Node *node) {
+    if (node->left != NULL) {
+        node->left->color = node->left->color == 'r' ? 'b' : 'r';
+    }
+
+    if (node->right != NULL) {
+        node->right->color = node->right->color == 'r' ? 'b' : 'r';
+    }
+
+    if (node->father != NULL) {
+        node->color = node->color == 'r' ? 'b' : 'r';
+        if (node->father->color == 'r') {
+            recoloring(node->father);
+        }
+    } else {
+        node->color = 'b';
+    }
+}
+
+
+/*
+* Print tree
+*/
 void printTree() {
     if (mainTree == NULL) {
         printf("Tree is empty\n");

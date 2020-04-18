@@ -6,13 +6,15 @@ void insertNewNode(int value);
 
 int main(int argc, char *argv[]) {
 
-    printTree();
-
-    insertNewNode(5);
-    insertNewNode(3);
-    insertNewNode(7);
-    insertNewNode(4);
+    insertNewNode(11);
     insertNewNode(2);
+    insertNewNode(14);
+    insertNewNode(1);
+    insertNewNode(7);
+    insertNewNode(5);
+    insertNewNode(8);
+    insertNewNode(13);
+    insertNewNode(15);
     printTree();
 }
 
