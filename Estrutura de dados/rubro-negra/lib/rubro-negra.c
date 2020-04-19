@@ -1,35 +1,14 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "rubro-negra.h"
+#include "rubro-negra_p.h"
 
 #define RED 1
 #define BLACK 0
 
-// Color Manager
-int getColor(Node *node);
-int isChangeColor(Node *node);
-void changeColor(Node *node);
-
-// Rotation Manager
-int isRotationRight(Node *node);
-int isRotationLeft(Node *node);
-int isRotationDoubleRight(Node *node);
-int isRotationDoubleLeft(Node *node);
-Node *rotationRight(Node *node);
-Node *rotationLeft(Node *node);
-
-// Responsable to balance the tree
-Node *balance(Node *root);
-
-// Responsable to print All nodes of the tree.
-void printAll(Node *node);
-
-// Responsable to insert a new node.
-Node *insertNode(Node* root, Node* node);
-
 typedef struct node {
     int value;
-    int color; // 1-> RED, 0-> BLACK
+    int color;
     Node *right;
     Node *left;
 } Node;
@@ -49,22 +28,23 @@ Node *create(int value) {
     return node;
 }
 
-void insert(Node *node) {
+void push(int value) {
+    Node* node = create(value);
     if (mainTree == NULL) {
         mainTree = (Tree *) malloc(sizeof(Tree));
     }
-    mainTree->root = insertNode(mainTree->root, node);
+    mainTree->root = insert(mainTree->root, node);
     mainTree->root->color = BLACK;
 }
 
-Node* insertNode(Node* root, Node* node) {
+Node* insert(Node* root, Node* node) {
     if (root == NULL) {
         root = node;
     } else {
         if (node->value < root->value) {
-            root->left = insertNode(root->left, node);
+            root->left = insert(root->left, node);
         } else if (node->value > root->value) {
-            root->right = insertNode(root->right, node);
+            root->right = insert(root->right, node);
         }
         root = balance(root);
     }

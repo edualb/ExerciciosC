@@ -1,21 +1,7 @@
-// rubro-negra lib
+// rubro-negra.h
 
-/*  
-typedef struct node {
-    int value;
-    char color; // r-> red, b-> black
-    Node* right;
-    Node* left;
-    Node* father;
-} Node;
-*/
-typedef struct node Node;
+// Insert a new node inside of the tree.
+void push(int value);
 
-// Responsable to create a new node.
-Node* create(int value);
-
-// Responsable to insert a new node in the tree.
-void insert(Node* node);
-
-// Responsable to print the tree.
+// Print the tree.
 void printTree();
