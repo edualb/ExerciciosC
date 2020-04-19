@@ -11,6 +11,7 @@ typedef struct node {
     int color;
     Node *right;
     Node *left;
+    Node *father;
 } Node;
 
 typedef struct tree {
@@ -28,23 +29,91 @@ Node *create(int value) {
     return node;
 }
 
+void get(int value) {
+    if (mainTree->root == NULL) {
+        printf("Arvore vazia\n");
+    } else {
+        Node *node = search(mainTree->root, value);
+        printf("Found: Value: %d, Color: %d\n", node->value, node->color);
+    }
+}
+
 void push(int value) {
     Node* node = create(value);
     if (mainTree == NULL) {
         mainTree = (Tree *) malloc(sizeof(Tree));
     }
-    mainTree->root = insert(mainTree->root, node);
+    mainTree->root = insert(mainTree->root, NULL, node);
+    mainTree->root->father = NULL;
     mainTree->root->color = BLACK;
 }
 
-Node* insert(Node* root, Node* node) {
+// void delete(int value) {
+//     if (mainTree->root == NULL) {
+//         printf("Arvore vazia\n");
+//     } else {
+//         removeNode(mainTree->root, value);
+//     }
+// }
+
+// void removeNode(Node* root, int value) {
+//     if (root->value == value) {
+//         if (root->right == NULL && root->left == NULL && getColor(root) == RED) {
+//             free(root);
+//         }
+//         if (root->left == NULL && root->right == NULL && getColor(root) == BLACK) {
+//             if (root->father == NULL) {
+//                 free(root);
+//             } else {
+//                 Node *brother = root->father->left != root ? root->father->left : root->father->right;
+//                 int isNephewRed = getColor(brother->right) == RED || getColor(brother->left) == RED;
+//                 int isNephewBlack = getColor(brother->right) == BLACK && getColor(brother->left) == BLACK;
+
+//                 // Case 1
+//                 if (getColor(brother) == BLACK && isNephewRed) {
+
+//                 }
+                
+//                 // Case 2
+//                 if (getColor(brother) == BLACK && isNephewBlack) {
+
+//                 }
+
+//                 // Case 3
+//                 if (getColor(brother) == RED) {
+
+//                 }
+
+//             }
+//         }
+//     } else if (value < root->value) {
+//         removeNode(root->left, value);
+//         balance(root);
+//     } else {
+//         removeNode(root->right, value);
+//         balance(root);
+//     }
+// }
+
+Node *search(Node* node, int value) {
+    if (node == NULL || node->value == value) {
+        return node;
+    }
+    if (value < node->value) {
+        return search(node->left, value);
+    }
+    return search(node->right, value);
+}
+
+Node* insert(Node *root, Node *father, Node *node) {
     if (root == NULL) {
         root = node;
+        root->father = father;
     } else {
         if (node->value < root->value) {
-            root->left = insert(root->left, node);
+            root->left = insert(root->left, root, node);
         } else if (node->value > root->value) {
-            root->right = insert(root->right, node);
+            root->right = insert(root->right, root, node);
         }
         root = balance(root);
     }
@@ -72,7 +141,12 @@ int getColor(Node *node) {
 Node *rotationLeft(Node *node) {
     Node *nodeRight = node->right;
     node->right = nodeRight->left;
+    if (nodeRight->left != NULL) {
+        nodeRight->left->father = node;
+    }
     nodeRight->left = node;
+    nodeRight->father = node->father;
+    node->father = nodeRight;
     nodeRight->color = node->color;
     node->color = RED;
     return nodeRight;
@@ -81,7 +155,12 @@ Node *rotationLeft(Node *node) {
 Node *rotationRight(Node *node) {
     Node *nodeLeft = node->left;
     node->left = nodeLeft->right;
+    if (nodeLeft->right != NULL) {
+        nodeLeft->right->father = node;
+    }
     nodeLeft->right = node;
+    nodeLeft->father = node->father;
+    node->father = nodeLeft;
     nodeLeft->color = node->color;
     node->color = RED;
     return nodeLeft;

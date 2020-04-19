@@ -45,7 +45,13 @@ Node *balance(Node *root);
 void printAll(Node *node);
 
 // Responsable to insert a new node.
-Node *insert(Node* root, Node* node);
+Node *insert(Node* root, Node *father, Node* node);
 
 // Responsable to create a new node.
-Node* create(int value);
+Node *create(int value);
+
+// Search a value through red-black tree
+Node *search(Node* node, int value);
+
+// Remove a value through red-black tree
+// void removeNode(Node* root, int value);

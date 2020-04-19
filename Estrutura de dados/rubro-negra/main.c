@@ -49,4 +49,7 @@ int main(int argc, char *argv[]) {
     // INSERT 7
     push(7);
     printTree();
+
+    //SEARCHING
+    get(7);
 }
