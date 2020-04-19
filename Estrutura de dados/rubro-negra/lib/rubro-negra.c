@@ -5,25 +5,24 @@
 #define RED 1
 #define BLACK 0
 
-// Responsable to print All nodes of the tree.
-void printAll(Node *node);
-
-// Responsable to insert a new node.
-Node *insertNode(Node* root, Node* node);
-
-// Responsable to recoloring the nodes
+// Color Manager
+int getColor(Node *node);
+int isChangeColor(Node *node);
 void changeColor(Node *node);
 
-// Responsable to get the color of the node
-int getColor(Node *node);
-
-int isChangeColor(Node *node);
+// Rotation Manager
 int isRotationRight(Node *node);
 int isRotationLeft(Node *node);
 int isRotationDoubleRight(Node *node);
 int isRotationDoubleLeft(Node *node);
 Node *rotationRight(Node *node);
 Node *rotationLeft(Node *node);
+
+// Responsable to print All nodes of the tree.
+void printAll(Node *node);
+
+// Responsable to insert a new node.
+Node *insertNode(Node* root, Node* node);
 
 typedef struct node {
     int value;

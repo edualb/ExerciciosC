@@ -6,6 +6,10 @@ void insertNewNode(int value);
 
 int main(int argc, char *argv[]) {
 
+    // References:
+    // http://www.ufjf.br/jairo_souza/files/2012/11/5-Indexa%C3%A7%C3%A3o-Arvore-Vermelho-Preta.pdf
+    // https://www.youtube.com/watch?v=L4gWuqpvk4E&list=PL8iN9FQ7_jt6H5m4Gm0H89sybzR9yaaka&index=110
+
     /* Case 1 and 2 */
     // insertNewNode(11);
     // insertNewNode(2);
