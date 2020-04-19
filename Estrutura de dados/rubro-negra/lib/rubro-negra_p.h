@@ -54,4 +54,4 @@ Node *create(int value);
 Node *search(Node* node, int value);
 
 // Remove a value through red-black tree
-// void removeNode(Node* root, int value);
+Node *removeNode(Node* root, int value);

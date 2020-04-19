@@ -40,16 +40,33 @@ int main(int argc, char *argv[]) {
     // push(10);
 
     /* EXAMPLE */
-    push(2);
-    push(1);
-    push(4);
-    push(3);
-    push(5);
-    push(6);
+    // push(2);
+    // push(1);
+    // push(4);
+    // push(3);
+    // push(5);
+    // push(6);
     // INSERT 7
-    push(7);
+    // push(7);
+
+    // push(2);
+    // push(1);
+    // push(48);
+    // push(30);
+    // push(60);
+    // push(50);
+    // push(70);
+    // push(25);
+    // push(20);
+    // push(35);
+
+    push(30);
+    push(20);
+    push(40);
+    push(10);
+    delete(40);
     printTree();
 
     //SEARCHING
-    get(7);
+    // get(7);
 }

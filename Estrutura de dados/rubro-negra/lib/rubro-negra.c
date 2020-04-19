@@ -48,52 +48,65 @@ void push(int value) {
     mainTree->root->color = BLACK;
 }
 
-// void delete(int value) {
-//     if (mainTree->root == NULL) {
-//         printf("Arvore vazia\n");
-//     } else {
-//         removeNode(mainTree->root, value);
-//     }
-// }
+void delete(int value) {
+    if (mainTree->root == NULL) {
+        printf("Arvore vazia\n");
+    } else {
+        mainTree->root = removeNode(mainTree->root, value);
+    }
+}
 
-// void removeNode(Node* root, int value) {
-//     if (root->value == value) {
-//         if (root->right == NULL && root->left == NULL && getColor(root) == RED) {
-//             free(root);
-//         }
-//         if (root->left == NULL && root->right == NULL && getColor(root) == BLACK) {
-//             if (root->father == NULL) {
-//                 free(root);
-//             } else {
-//                 Node *brother = root->father->left != root ? root->father->left : root->father->right;
-//                 int isNephewRed = getColor(brother->right) == RED || getColor(brother->left) == RED;
-//                 int isNephewBlack = getColor(brother->right) == BLACK && getColor(brother->left) == BLACK;
+// file:///home/eduardo/Downloads/inf01203-rubronegras%20(2).pdf
+Node *removeNode(Node *root, int value) {
+    if (root->value == value) {
+        if (root->left == NULL && root->right == NULL) {
+            if (root->father == NULL) {
+                free(root);
+            } else {
+                Node *brother = root->father->left != root ? root->father->left : root->father->right;
+                int isNephewRed = getColor(brother->right) == RED || getColor(brother->left) == RED;
+                int isNephewBlack = getColor(brother->right) == BLACK && getColor(brother->left) == BLACK;
 
-//                 // Case 1
-//                 if (getColor(brother) == BLACK && isNephewRed) {
-
-//                 }
+                // Case 1
+                if (getColor(brother) == BLACK && isNephewRed) {
+                    Node* father = root->father;
+                    if (father->left == root) {
+                        father->left = NULL;
+                    } else {
+                        father->right = NULL;
+                    }
+                    free(root);
+                    if (brother == father->left) {
+                        return rotationRight(father);
+                    } else {
+                        return rotationLeft(father);
+                    }
+                }
                 
-//                 // Case 2
-//                 if (getColor(brother) == BLACK && isNephewBlack) {
+                // Case 2
+                if (getColor(brother) == BLACK && isNephewBlack) {
 
-//                 }
+                }
 
-//                 // Case 3
-//                 if (getColor(brother) == RED) {
+                // Case 3
+                if (getColor(brother) == RED) {
 
-//                 }
+                }
+            }
+        }
+    } else if (value < root->value) {
+        root = removeNode(root->left, value);
+        root = balance(root);
+    } else {
+        root = removeNode(root->right, value);
+        root = balance(root);
+    }
 
-//             }
-//         }
-//     } else if (value < root->value) {
-//         removeNode(root->left, value);
-//         balance(root);
-//     } else {
-//         removeNode(root->right, value);
-//         balance(root);
-//     }
-// }
+    if (root->father != NULL) {
+        return root->father;
+    }
+    return root;
+}
 
 Node *search(Node* node, int value) {
     if (node == NULL || node->value == value) {
