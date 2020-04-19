@@ -20,6 +20,8 @@ int getColor(Node *node);
 int isChangeColor(Node *node);
 int isRotationRight(Node *node);
 int isRotationLeft(Node *node);
+int isRotationDoubleRight(Node *node);
+int isRotationDoubleLeft(Node *node);
 Node *rotationRight(Node *node);
 Node *rotationLeft(Node *node);
 
@@ -49,7 +51,6 @@ void insert(Node *node) {
     if (mainTree == NULL) {
         mainTree = (Tree *) malloc(sizeof(Tree));
     }
-
     mainTree->root = insertNode(mainTree->root, node);
     mainTree->root->color = BLACK;
 }
@@ -70,6 +71,16 @@ Node* insertNode(Node* root, Node* node) {
 
         if (isRotationLeft(root)) {
             root = rotationLeft(root);
+        }
+
+        if (isRotationDoubleLeft(root)) {
+            root->right = rotationRight(root->right);
+            root = rotationLeft(root);
+        }
+
+        if (isRotationDoubleRight(root)) {
+            root->left = rotationLeft(root->left);
+            root = rotationRight(root);
         }
 
         if (isChangeColor(root)) {
@@ -137,6 +148,20 @@ int isRotationLeft(Node *node) {
     int isRightSonRed = getColor(node->right) == RED;
 
     return getColor(node->left) == BLACK && isRightSonRed && isRightGrandsonRed;
+}
+
+int isRotationDoubleLeft(Node *node) {
+    int isLeftGrandsonRed = node->right != NULL && getColor(node->right->left) == RED;
+    int isRightSonRed = getColor(node->right) == RED;
+
+    return getColor(node->left) == BLACK && isRightSonRed && isLeftGrandsonRed;
+}
+
+int isRotationDoubleRight(Node *node) {
+    int isRightGrandsonRed = node->left != NULL && getColor(node->left->right) == RED;
+    int isLeftSonRed = getColor(node->left) == RED;
+
+    return getColor(node->right) == BLACK && isLeftSonRed && isRightGrandsonRed;
 }
 
 /*

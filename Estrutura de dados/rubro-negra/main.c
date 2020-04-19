@@ -28,9 +28,24 @@ int main(int argc, char *argv[]) {
     // insertNewNode(15);
 
     /* Case 3C */
-    insertNewNode(11);
-    insertNewNode(14);
-    insertNewNode(15);
+    // insertNewNode(11);
+    // insertNewNode(14);
+    // insertNewNode(13);
+
+    /* Case 3D */
+    // insertNewNode(11);
+    // insertNewNode(8);
+    // insertNewNode(10);
+
+    /* EXAMPLE */
+    insertNewNode(2);
+    insertNewNode(1);
+    insertNewNode(4);
+    insertNewNode(3);
+    insertNewNode(5);
+    insertNewNode(6);
+    // INSERT 7
+    insertNewNode(7);
     printTree();
 }
 
