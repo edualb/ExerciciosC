@@ -18,6 +18,9 @@ int isRotationDoubleLeft(Node *node);
 Node *rotationRight(Node *node);
 Node *rotationLeft(Node *node);
 
+// Responsable to balance the tree
+Node *balance(Node *root);
+
 // Responsable to print All nodes of the tree.
 void printAll(Node *node);
 
@@ -63,28 +66,7 @@ Node* insertNode(Node* root, Node* node) {
         } else if (node->value > root->value) {
             root->right = insertNode(root->right, node);
         }
-
-        if (isRotationRight(root)) {
-            root = rotationRight(root);
-        }
-
-        if (isRotationLeft(root)) {
-            root = rotationLeft(root);
-        }
-
-        if (isRotationDoubleLeft(root)) {
-            root->right = rotationRight(root->right);
-            root = rotationLeft(root);
-        }
-
-        if (isRotationDoubleRight(root)) {
-            root->left = rotationLeft(root->left);
-            root = rotationRight(root);
-        }
-
-        if (isChangeColor(root)) {
-            changeColor(root);
-        }
+        root = balance(root);
     }
     return root;
 }
@@ -161,6 +143,27 @@ int isRotationDoubleRight(Node *node) {
     int isLeftSonRed = getColor(node->left) == RED;
 
     return getColor(node->right) == BLACK && isLeftSonRed && isRightGrandsonRed;
+}
+
+Node *balance(Node *root) {
+    if (isRotationRight(root)) {
+        root = rotationRight(root);
+    }
+    if (isRotationLeft(root)) {
+        root = rotationLeft(root);
+    }
+    if (isRotationDoubleLeft(root)) {
+        root->right = rotationRight(root->right);
+        root = rotationLeft(root);
+    }
+    if (isRotationDoubleRight(root)) {
+        root->left = rotationLeft(root->left);
+        root = rotationRight(root);
+    }
+    if (isChangeColor(root)) {
+        changeColor(root);
+    }
+    return root;
 }
 
 /*
