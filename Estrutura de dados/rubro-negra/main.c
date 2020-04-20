@@ -64,6 +64,7 @@ int main(int argc, char *argv[]) {
     push(20);
     push(40);
     push(10);
+    delete(10);
     delete(40);
     printTree();
 

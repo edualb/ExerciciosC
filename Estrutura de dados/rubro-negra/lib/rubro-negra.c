@@ -53,6 +53,8 @@ void delete(int value) {
         printf("Arvore vazia\n");
     } else {
         mainTree->root = removeNode(mainTree->root, value);
+        mainTree->root->father = NULL;
+        mainTree->root->color = BLACK;
     }
 }
 
@@ -60,7 +62,13 @@ void delete(int value) {
 Node *removeNode(Node *root, int value) {
     if (root->value == value) {
         if (root->left == NULL && root->right == NULL) {
-            if (root->father == NULL) {
+            if (root->father == NULL || root->color == RED) {
+                Node* father = root->father;
+                if (father->left == root) {
+                    father->left = NULL;
+                } else {
+                    father->right = NULL;
+                }
                 free(root);
             } else {
                 Node *brother = root->father->left != root ? root->father->left : root->father->right;
@@ -85,7 +93,19 @@ Node *removeNode(Node *root, int value) {
                 
                 // Case 2
                 if (getColor(brother) == BLACK && isNephewBlack) {
-
+                    Node* father = root->father;
+                    if (father->left == root) {
+                        father->left = NULL;
+                    } else {
+                        father->right = NULL;
+                    }
+                    free(root);
+                    father->color = !father->color;
+                    if (father->father == NULL) {
+                        brother->color = RED;
+                    } else {
+                        brother->color = !brother->color;
+                    }
                 }
 
                 // Case 3
