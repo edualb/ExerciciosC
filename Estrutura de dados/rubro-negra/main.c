@@ -66,6 +66,7 @@ int main(int argc, char *argv[]) {
     push(10);
     delete(10);
     delete(40);
+    delete(30);
     printTree();
 
     //SEARCHING

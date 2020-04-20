@@ -61,58 +61,43 @@ void delete(int value) {
 // file:///home/eduardo/Downloads/inf01203-rubronegras%20(2).pdf
 Node *removeNode(Node *root, int value) {
     if (root->value == value) {
+        Node *father = root->father;
+
         if (root->left == NULL && root->right == NULL) {
-            if (root->father == NULL || root->color == RED) {
-                Node* father = root->father;
-                if (father->left == root) {
-                    father->left = NULL;
-                } else {
-                    father->right = NULL;
-                }
+            father->left = father->left == root ? NULL : father->left;
+            father->right = father->right == root ? NULL : father->right;
+
+            if (father == NULL || root->color == RED) {
                 free(root);
+                return father;
             } else {
-                Node *brother = root->father->left != root ? root->father->left : root->father->right;
+                Node *brother = father->left != root ? father->left : father->right;
                 int isNephewRed = getColor(brother->right) == RED || getColor(brother->left) == RED;
                 int isNephewBlack = getColor(brother->right) == BLACK && getColor(brother->left) == BLACK;
 
-                // Case 1
-                if (getColor(brother) == BLACK && isNephewRed) {
-                    Node* father = root->father;
-                    if (father->left == root) {
-                        father->left = NULL;
-                    } else {
-                        father->right = NULL;
-                    }
+                // Case 1 OR Case 3
+                if ((getColor(brother) == BLACK && isNephewRed) || (getColor(brother) == RED)) {
                     free(root);
-                    if (brother == father->left) {
-                        return rotationRight(father);
-                    } else {
-                        return rotationLeft(father);
-                    }
+                    return brother == father->left ? rotationRight(father) : rotationLeft(father);
                 }
                 
                 // Case 2
                 if (getColor(brother) == BLACK && isNephewBlack) {
-                    Node* father = root->father;
-                    if (father->left == root) {
-                        father->left = NULL;
-                    } else {
-                        father->right = NULL;
-                    }
                     free(root);
-                    father->color = !father->color;
-                    if (father->father == NULL) {
-                        brother->color = RED;
-                    } else {
-                        brother->color = !brother->color;
-                    }
-                }
-
-                // Case 3
-                if (getColor(brother) == RED) {
-
+                    father->color = BLACK;
+                    brother->color = RED;
+                    return father;
                 }
             }
+        } else if ((root->left == NULL && root->right != NULL) || (root->left != NULL && root->right == NULL)) {
+            Node *son = root->left != NULL ? root->left : root->right;
+            if (getColor(root) == RED) {
+                
+            } else {
+
+            }
+        } else {
+
         }
     } else if (value < root->value) {
         root = removeNode(root->left, value);
