@@ -63,11 +63,16 @@ int main(int argc, char *argv[]) {
     push(30);
     push(20);
     push(40);
-    push(10);
-    delete(10);
-    delete(40);
-    delete(30);
+    push(45);
+    push(50);
     printTree();
+    printf("\n\n\n");
+    delete(50);
+    printTree();
+    printf("\n\n\n");
+    delete(45);
+    printTree();
+    printf("\n\n\n");
 
     //SEARCHING
     // get(7);

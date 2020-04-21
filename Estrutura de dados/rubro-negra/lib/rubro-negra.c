@@ -91,11 +91,15 @@ Node *removeNode(Node *root, int value) {
             }
         } else if ((root->left == NULL && root->right != NULL) || (root->left != NULL && root->right == NULL)) {
             Node *son = root->left != NULL ? root->left : root->right;
-            if (getColor(root) == RED) {
-                
+            if (father->left == root) {
+                father->left = son;
             } else {
-
+                father->right = son;
             }
+            free(root);
+            son->father = father;
+            son->color = BLACK;
+            return father;
         } else {
 
         }
