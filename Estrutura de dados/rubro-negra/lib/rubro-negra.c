@@ -62,19 +62,17 @@ void delete(int value) {
 Node *removeNode(Node *root, int value) {
     if (root->value == value) {
         Node *father = root->father;
-
         if (root->left == NULL && root->right == NULL) {
+            Node *brother = father->left != root ? father->left : father->right;
             father->left = father->left == root ? NULL : father->left;
             father->right = father->right == root ? NULL : father->right;
-
-            if (father == NULL || root->color == RED) {
+            if (father == NULL || getColor(root) == RED) {
                 free(root);
                 return father;
             } else {
-                Node *brother = father->left != root ? father->left : father->right;
                 int isNephewRed = getColor(brother->right) == RED || getColor(brother->left) == RED;
                 int isNephewBlack = getColor(brother->right) == BLACK && getColor(brother->left) == BLACK;
-
+                
                 // Case 1 OR Case 3
                 if ((getColor(brother) == BLACK && isNephewRed) || (getColor(brother) == RED)) {
                     free(root);
@@ -101,7 +99,12 @@ Node *removeNode(Node *root, int value) {
             son->color = BLACK;
             return father;
         } else {
-
+            Node *farther = getFarther(root->right);
+            root->value = farther->value;
+            farther->value = value;
+            root = removeNode(root->right, value);
+            root = balance(root);
+            return root->father != NULL ? root->father : root;
         }
     } else if (value < root->value) {
         root = removeNode(root->left, value);
@@ -111,10 +114,7 @@ Node *removeNode(Node *root, int value) {
         root = balance(root);
     }
 
-    if (root->father != NULL) {
-        return root->father;
-    }
-    return root;
+    return root->father != NULL ? root->father : root;
 }
 
 Node *search(Node* node, int value) {
@@ -125,6 +125,13 @@ Node *search(Node* node, int value) {
         return search(node->left, value);
     }
     return search(node->right, value);
+}
+
+Node *getFarther(Node *node) {
+    if (node->left == NULL) {
+        return node;
+    }
+    return getFarther(node->left);
 }
 
 Node* insert(Node *root, Node *father, Node *node) {

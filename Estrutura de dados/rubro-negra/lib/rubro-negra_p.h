@@ -55,3 +55,5 @@ Node *search(Node* node, int value);
 
 // Remove a value through red-black tree
 Node *removeNode(Node* root, int value);
+
+Node *getFarther(Node *node);
