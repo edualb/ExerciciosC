@@ -53,8 +53,10 @@ void delete(int value) {
         printf("Arvore vazia\n");
     } else {
         mainTree->root = removeNode(mainTree->root, value);
-        mainTree->root->father = NULL;
-        mainTree->root->color = BLACK;
+        if (mainTree->root != NULL) {
+            mainTree->root->father = NULL;
+            mainTree->root->color = BLACK;
+        }
     }
 }
 
@@ -63,15 +65,20 @@ Node *removeNode(Node *root, int value) {
     if (root->value == value) {
         Node *father = root->father;
         if (root->left == NULL && root->right == NULL) {
-            Node *brother = father->left != root ? father->left : father->right;
-            father->left = father->left == root ? NULL : father->left;
-            father->right = father->right == root ? NULL : father->right;
-            if (father == NULL || getColor(root) == RED) {
+            if (father == NULL) {
                 free(root);
-                return father;
+                return NULL;
             } else {
+                Node *brother = father->left != root ? father->left : father->right;
+                father->left = father->left == root ? NULL : father->left;
+                father->right = father->right == root ? NULL : father->right;
                 int isNephewRed = getColor(brother->right) == RED || getColor(brother->left) == RED;
                 int isNephewBlack = getColor(brother->right) == BLACK && getColor(brother->left) == BLACK;
+                
+                if (getColor(root) == RED) {
+                    free(root);
+                    return father;
+                }
                 
                 // Case 1 OR Case 3
                 if ((getColor(brother) == BLACK && isNephewRed) || (getColor(brother) == RED)) {
@@ -89,15 +96,17 @@ Node *removeNode(Node *root, int value) {
             }
         } else if ((root->left == NULL && root->right != NULL) || (root->left != NULL && root->right == NULL)) {
             Node *son = root->left != NULL ? root->left : root->right;
-            if (father->left == root) {
-                father->left = son;
-            } else {
-                father->right = son;
+            if (father != NULL) {
+                if (father->left == root) {
+                    father->left = son;
+                } else {
+                    father->right = son;
+                }
             }
             free(root);
             son->father = father;
             son->color = BLACK;
-            return father;
+            return father != NULL ? father : son;
         } else {
             Node *farther = getFarther(root->right);
             root->value = farther->value;
@@ -261,6 +270,10 @@ void printTree() {
     if (mainTree == NULL) {
         printf("Tree is empty\n");
     } else {
+        if (mainTree->root == NULL) {
+            printf("Tree is empty\n");
+            return;
+        }
         printAll(mainTree->root);
     }
 }
