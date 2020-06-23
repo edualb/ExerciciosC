@@ -20,300 +20,325 @@ typedef struct tree {
 
 Tree *mainTree;
 
-Node *create(int value) {
-    Node* node = (Node *) malloc(sizeof(Node));
-    node->value = value;
-    node->color = RED;
-    node->left = NULL;
-    node->right = NULL;
-    return node;
+// OK
+Node *create(int value) { // O(1)
+    Node* node = (Node *) malloc(sizeof(Node)); // c | 1
+    node->value = value; // c | 1
+    node->color = RED; // c | 1
+    node->left = NULL; // c | 1
+    node->right = NULL; // c | 1
+    return node; // c | 1
 }
-
+// ok
 void get(int value) {
-    if (mainTree->root == NULL) {
-        printf("Arvore vazia\n");
+    if (mainTree->root == NULL) { // c | 1
+        printf("Arvore vazia\n"); // c | 1
     } else {
-        Node *node = search(mainTree->root, value);
-        printf("Found: Value: %d, Color: %d\n", node->value, node->color);
+        Node *node = search(mainTree->root, value); // O(log n)
+        printf("Found: Value: %d, Color: %d\n", node->value, node->color); // c | 1
     }
 }
 
+// ok
 void push(int value) {
-    Node* node = create(value);
-    if (mainTree == NULL) {
-        mainTree = (Tree *) malloc(sizeof(Tree));
+    Node* node = create(value); // c | 1
+    if (mainTree == NULL) { // c | 1
+        mainTree = (Tree *) malloc(sizeof(Tree)); // c | 1
     }
-    mainTree->root = insert(mainTree->root, NULL, node);
-    mainTree->root->father = NULL;
-    mainTree->root->color = BLACK;
+    mainTree->root = insert(mainTree->root, NULL, node); // c | ?
+    mainTree->root->father = NULL; // c | 1
+    mainTree->root->color = BLACK; // c | 1
 }
 
 void delete(int value) {
-    if (mainTree->root == NULL) {
-        printf("Arvore vazia\n");
+    if (mainTree->root == NULL) { // c | 1
+        printf("Arvore vazia\n"); // c | 1
     } else {
-        mainTree->root = removeNode(mainTree->root, value);
-        if (mainTree->root != NULL) {
-            mainTree->root->father = NULL;
-            mainTree->root->color = BLACK;
+        mainTree->root = removeNode(mainTree->root, value); // c | ?
+        if (mainTree->root != NULL) { // c | 1
+            mainTree->root->father = NULL; // c | 1
+            mainTree->root->color = BLACK; // c | 1
         }
     }
 }
 
 // file:///home/eduardo/Downloads/inf01203-rubronegras%20(2).pdf
-Node *removeNode(Node *root, int value) {
-    if (root->value == value) {
-        Node *father = root->father;
-        if (root->left == NULL && root->right == NULL) {
-            if (father == NULL) {
-                free(root);
-                return NULL;
+// ok
+Node *removeNode(Node *root, int value) { // O((log n)^2)
+    if (root->value == value) { // c | 1
+        Node *father = root->father; // c | 1
+        if (root->left == NULL && root->right == NULL) { // c | 1
+            if (father == NULL) { // c | 1
+                free(root); // c | 1
+                return NULL; // c | 1
             } else {
-                Node *brother = father->left != root ? father->left : father->right;
-                father->left = father->left == root ? NULL : father->left;
-                father->right = father->right == root ? NULL : father->right;
+                Node *brother = father->left != root ? father->left : father->right; // c | 1
+                father->left = father->left == root ? NULL : father->left; // c | 1
+                father->right = father->right == root ? NULL : father->right; // c | 1
+                // c | 1 + 1 + 1
                 int isNephewRed = getColor(brother->right) == RED || getColor(brother->left) == RED;
+                // c | 1 + 1 + 1
                 int isNephewBlack = getColor(brother->right) == BLACK && getColor(brother->left) == BLACK;
                 
-                if (getColor(root) == RED) {
-                    free(root);
-                    return father;
+                if (getColor(root) == RED) { // c | 1
+                    free(root); // c | 1
+                    return father; // c | 1
                 }
                 
                 // Case 1 OR Case 3
-                if ((getColor(brother) == BLACK && isNephewRed) || (getColor(brother) == RED)) {
-                    free(root);
+                if ((getColor(brother) == BLACK && isNephewRed) || (getColor(brother) == RED)) { // c | 1 + 1
+                    free(root); // c | 1
+                    // c | 1 + 1 ||  c | 1 + 1
                     return brother == father->left ? rotationRight(father) : rotationLeft(father);
                 }
                 
                 // Case 2
-                if (getColor(brother) == BLACK && isNephewBlack) {
-                    free(root);
-                    father->color = BLACK;
-                    brother->color = RED;
-                    return father;
+                if (getColor(brother) == BLACK && isNephewBlack) { // c | 1
+                    free(root); // c | 1
+                    father->color = BLACK; // c | 1
+                    brother->color = RED; // c | 1
+                    return father; // c | 1
                 }
             }
-        } else if ((root->left == NULL && root->right != NULL) || (root->left != NULL && root->right == NULL)) {
-            Node *son = root->left != NULL ? root->left : root->right;
-            if (father != NULL) {
-                if (father->left == root) {
-                    father->left = son;
+        } else if ((root->left == NULL && root->right != NULL) || (root->left != NULL && root->right == NULL)) { // c | 1
+            Node *son = root->left != NULL ? root->left : root->right; // c | 1
+            if (father != NULL) { // c | 1
+                if (father->left == root) { // c | 1
+                    father->left = son; // c | 1
                 } else {
-                    father->right = son;
+                    father->right = son; // c | 1
                 }
             }
-            free(root);
-            son->father = father;
-            son->color = BLACK;
-            return father != NULL ? father : son;
+            free(root); // c | 1
+            son->father = father; // c | 1
+            son->color = BLACK; // c | 1 
+            return father != NULL ? father : son; // c | 1
         } else {
-            Node *farther = getFarther(root->right);
-            root->value = farther->value;
-            farther->value = value;
-            root = removeNode(root->right, value);
-            root = balance(root);
-            return root->father != NULL ? root->father : root;
+            Node *farther = getFarther(root->right); // c | log (n/2)
+            root->value = farther->value; // c | 1
+            farther->value = value; // c | 1
+            root = removeNode(root->right, value); // c | T(n/2)
+            root = balance(root); // c | 1
+            return root->father != NULL ? root->father : root; // c | 1 + 1
         }
-    } else if (value < root->value) {
-        root = removeNode(root->left, value);
-        root = balance(root);
+    } else if (value < root->value) { // c | 1
+        root = removeNode(root->left, value); // c | T(n/2)
+        root = balance(root); // c | 1
     } else {
-        root = removeNode(root->right, value);
-        root = balance(root);
+        root = removeNode(root->right, value); // c | T(n/2)
+        root = balance(root); // c | 1
     }
 
-    return root->father != NULL ? root->father : root;
+    return root->father != NULL ? root->father : root; // c | 1 + 1
 }
 
-Node *search(Node* node, int value) {
-    if (node == NULL || node->value == value) {
-        return node;
+// OK
+Node *search(Node* node, int value) { // O(log n)
+    if (node == NULL || node->value == value) { // c | 1
+        return node; // c | 1
     }
-    if (value < node->value) {
-        return search(node->left, value);
+    if (value < node->value) { // c | 1
+        return search(node->left, value); // c | T(n/2)
     }
-    return search(node->right, value);
+    return search(node->right, value); // c | T(n/2)
 }
 
-Node *getFarther(Node *node) {
-    if (node->left == NULL) {
-        return node;
+Node *getFarther(Node *node) { // O(log n)
+    if (node->left == NULL) { // c | 1
+        return node; // c | 1
     }
-    return getFarther(node->left);
+    return getFarther(node->left); // c | T(n/2)
 }
 
-Node* insert(Node *root, Node *father, Node *node) {
-    if (root == NULL) {
-        root = node;
-        root->father = father;
+// OK
+Node* insert(Node *root, Node *father, Node *node) { // O(log n)
+    if (root == NULL) { // c | 1
+        root = node; // c | 1
+        root->father = father; // c | 1
     } else {
-        if (node->value < root->value) {
-            root->left = insert(root->left, root, node);
-        } else if (node->value > root->value) {
-            root->right = insert(root->right, root, node);
+        if (node->value < root->value) { // c | 1
+            root->left = insert(root->left, root, node); // c | T(n/2)
+        } else if (node->value > root->value) { // c | 1
+            root->right = insert(root->right, root, node); // c | T(n/2)
         }
-        root = balance(root);
+        root = balance(root); // c | O(1)
     }
-    return root;
+    return root; // c | 1
 }
 
-void changeColor(Node *node) {
-    node->color = !node->color;
-    if (node->left != NULL) {
-        node->left->color = !node->left->color;
+// OK
+void changeColor(Node *node) { // O(1)
+    node->color = !node->color; // c | 1
+    if (node->left != NULL) { // c | 1
+        node->left->color = !node->left->color; // c | 1
     }
-    if (node->right != NULL) {
-        node->right->color = !node->right->color;
+    if (node->right != NULL) { // c | 1
+        node->right->color = !node->right->color; // c | 1
     }
 }
 
-int getColor(Node *node) {
-    if (node == NULL) {
-        return BLACK;
+// OK
+int getColor(Node *node) { // O(1)
+    if (node == NULL) { // c | 1
+        return BLACK; // c | 1
     } else {
-        return node->color;
+        return node->color; // c | 1
     }
 }
 
-Node *rotationLeft(Node *node) {
-    Node *nodeRight = node->right;
-    node->right = nodeRight->left;
-    if (nodeRight->left != NULL) {
-        nodeRight->left->father = node;
+// OK
+Node *rotationLeft(Node *node) { // O(1)
+    Node *nodeRight = node->right; // c | 1
+    node->right = nodeRight->left; // c | 1
+    if (nodeRight->left != NULL) { // c | 1
+        nodeRight->left->father = node; // c | 1
     }
-    nodeRight->left = node;
-    nodeRight->father = node->father;
-    node->father = nodeRight;
-    nodeRight->color = node->color;
-    node->color = RED;
-    return nodeRight;
+    nodeRight->left = node; // c | 1
+    nodeRight->father = node->father; // c | 1
+    node->father = nodeRight; // c | 1
+    nodeRight->color = node->color; // c | 1
+    node->color = RED; // c | 1
+    return nodeRight; // c | 1
 }
 
-Node *rotationRight(Node *node) {
-    Node *nodeLeft = node->left;
-    node->left = nodeLeft->right;
-    if (nodeLeft->right != NULL) {
-        nodeLeft->right->father = node;
+// OK
+Node *rotationRight(Node *node) { // O(1)
+    Node *nodeLeft = node->left; // c | 1
+    node->left = nodeLeft->right; // c | 1
+    if (nodeLeft->right != NULL) { // c | 1
+        nodeLeft->right->father = node; // c | 1
     }
-    nodeLeft->right = node;
-    nodeLeft->father = node->father;
-    node->father = nodeLeft;
-    nodeLeft->color = node->color;
-    node->color = RED;
-    return nodeLeft;
+    nodeLeft->right = node; // c | 1
+    nodeLeft->father = node->father; // c | 1
+    node->father = nodeLeft; // c | 1
+    nodeLeft->color = node->color; // c | 1
+    node->color = RED; // c | 1
+    return nodeLeft; // c | 1
 }
 
-int isChangeColor(Node *node) {
+// OK
+int isChangeColor(Node *node) { // O(1)
+    // c | 1 + 1 + 1
     int isRightGrandsonRed = node->right != NULL && 
         (getColor(node->right->right) == RED || getColor(node->right->left) == RED);
 
+    // c | 1 + 1 + 1
     int isLeftGrandsonRed = node->left != NULL && 
         (getColor(node->left->right) == RED || getColor(node->left->left) == RED);
 
+    // c | 1 + 1 + 1
     return getColor(node->right) == RED && getColor(node->left) == RED && (isLeftGrandsonRed || isRightGrandsonRed);
 }
 
-int isRotationRight(Node *node) {
-    int isRightGrandsonRed = node->left != NULL && getColor(node->left->left) == RED;
-    int isRightSonRed = getColor(node->left) == RED;
+// OK
+int isRotationRight(Node *node) { // O(1)
+    int isRightGrandsonRed = node->left != NULL && getColor(node->left->left) == RED; // c | 1 + 1
+    int isRightSonRed = getColor(node->left) == RED; // c | 1 + 1
 
-    return getColor(node->right) == BLACK && isRightSonRed && isRightGrandsonRed;
+    return getColor(node->right) == BLACK && isRightSonRed && isRightGrandsonRed; // c | 1 + 1
 }
 
-int isRotationLeft(Node *node) {
-    int isRightGrandsonRed = node->right != NULL && getColor(node->right->right) == RED;
-    int isRightSonRed = getColor(node->right) == RED;
+// OK
+int isRotationLeft(Node *node) { // O(1)
+    int isRightGrandsonRed = node->right != NULL && getColor(node->right->right) == RED; // c | 1 + 1
+    int isRightSonRed = getColor(node->right) == RED; // c | 1 + 1
 
-    return getColor(node->left) == BLACK && isRightSonRed && isRightGrandsonRed;
+    return getColor(node->left) == BLACK && isRightSonRed && isRightGrandsonRed; // c | 1 + 1
 }
 
-int isRotationDoubleLeft(Node *node) {
-    int isLeftGrandsonRed = node->right != NULL && getColor(node->right->left) == RED;
-    int isRightSonRed = getColor(node->right) == RED;
+// OK
+int isRotationDoubleLeft(Node *node) { // O(1)
+    int isLeftGrandsonRed = node->right != NULL && getColor(node->right->left) == RED; // c | 1 + 1
+    int isRightSonRed = getColor(node->right) == RED; // c | 1 + 1
 
-    return getColor(node->left) == BLACK && isRightSonRed && isLeftGrandsonRed;
+    return getColor(node->left) == BLACK && isRightSonRed && isLeftGrandsonRed; // c | 1 + 1
 }
 
-int isRotationDoubleRight(Node *node) {
-    int isRightGrandsonRed = node->left != NULL && getColor(node->left->right) == RED;
-    int isLeftSonRed = getColor(node->left) == RED;
+// OK
+int isRotationDoubleRight(Node *node) { // O(1)
+    int isRightGrandsonRed = node->left != NULL && getColor(node->left->right) == RED;// c | 1 + 1
+    int isLeftSonRed = getColor(node->left) == RED; // c | 1 + 1
 
-    return getColor(node->right) == BLACK && isLeftSonRed && isRightGrandsonRed;
+    return getColor(node->right) == BLACK && isLeftSonRed && isRightGrandsonRed; // c | 1 + 1
 }
 
-Node *balance(Node *root) {
-    if (isRotationRight(root)) {
-        root = rotationRight(root);
+// OK
+Node *balance(Node *root) { // O(1)
+    if (isRotationRight(root)) { // c | 1
+        root = rotationRight(root); // c | 1 + 1
     }
-    if (isRotationLeft(root)) {
-        root = rotationLeft(root);
+    if (isRotationLeft(root)) { // c | 1
+        root = rotationLeft(root); // c | 1 + 1
     }
-    if (isRotationDoubleLeft(root)) {
-        root->right = rotationRight(root->right);
-        root = rotationLeft(root);
+    if (isRotationDoubleLeft(root)) { // c | 1
+        root->right = rotationRight(root->right); // c | 1 + 1
+        root = rotationLeft(root); // c | 1 + 1
     }
-    if (isRotationDoubleRight(root)) {
-        root->left = rotationLeft(root->left);
-        root = rotationRight(root);
+    if (isRotationDoubleRight(root)) { // c | 1
+        root->left = rotationLeft(root->left); // c | 1 + 1
+        root = rotationRight(root); // c | 1 + 1
     }
-    if (isChangeColor(root)) {
-        changeColor(root);
+    if (isChangeColor(root)) { // c | 1
+        changeColor(root); // c | 1 + 1
     }
-    return root;
+    return root; // c | 1
 }
 
 /*
 * Print tree
 */
 void printTree() {
-    if (mainTree == NULL) {
-        printf("Tree is empty\n");
+    if (mainTree == NULL) { // c | 1
+        printf("Tree is empty\n"); // c | 1
     } else {
         if (mainTree->root == NULL) {
-            printf("Tree is empty\n");
-            return;
+            printf("Tree is empty\n"); // c | 1
+            return; // c | 1
         }
-        printAll(mainTree->root);
+        printAll(mainTree->root); // c | ?
     }
 }
 
 void printAll(Node *node) {
-    if (node->right != NULL) {
-        printAll(node->right);
+    if (node->right != NULL) { // c | 1
+        printAll(node->right); // c | T(n/2)
     }
 
-    if (node->right != NULL && node->left != NULL) {
-        if (mainTree->root == node) {
-            printf("** ROOT **   ");
+    if (node->right != NULL && node->left != NULL) { // c | 1
+        if (mainTree->root == node) { // c | 1
+            printf("** ROOT **   "); // c | 1
         } else {
-            printf("** NODE **   ");
+            printf("** NODE **   "); // c | 1
         }
+        // c | 1
         printf("value: %d, color: %d | right: %d, left: %d\n", node->value, node->color, node->right->value, node->left->value);
-    } else if (node->right != NULL && node->left == NULL) {
-        if (mainTree->root == node) {
-            printf("** ROOT **   ");
+    } else if (node->right != NULL && node->left == NULL) { // c | 1
+        if (mainTree->root == node) { // c | 1
+            printf("** ROOT **   "); // c | 1
         } else {
-            printf("** NODE **   ");
+            printf("** NODE **   "); // c | 1
         }
+        // c | 1
         printf("value: %d, color: %d | right: %d, left: NULL\n", node->value, node->color, node->right->value);
-    } else if (node->right == NULL && node->left != NULL) {
-        if (mainTree->root == node) {
-            printf("** ROOT **   ");
+    } else if (node->right == NULL && node->left != NULL) { // c | 1
+        if (mainTree->root == node) { // c | 1
+            printf("** ROOT **   "); // c | 1
         } else {
-            printf("** NODE **   ");
+            printf("** NODE **   "); // c | 1
         }
+        // c | 1
         printf("value: %d, color: %d | right: NULL, left: %d\n", node->value, node->color, node->left->value);
     } else {
-        if (mainTree->root == node) {
-            printf("** ROOT **   ");
+        if (mainTree->root == node) { // c | 1
+            printf("** ROOT **   "); // c | 1
         } else {
-            printf("** NODE **   ");
+            printf("** NODE **   "); // c | 1
         }
+        // c | 1
         printf("value: %d, color: %d | right: NULL, left: NULL\n", node->value, node->color);
     }
     
-    if (node->left != NULL) {
-        printAll(node->left);
+    if (node->left != NULL) { // c | 1
+        printAll(node->left); // c | T(n/2)
     }
 }

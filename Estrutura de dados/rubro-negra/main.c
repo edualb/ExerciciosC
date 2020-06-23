@@ -19,11 +19,11 @@ int main(int argc, char *argv[]) {
 
     // REMOVE
     // delete(40);
-    // delete(30);
+    delete(30);
     // delete(20);
     // delete(25);
     // delete(28);
-    // printTree();
+    printTree();
     // printf("\n\n");
 
     // SEARCHING
